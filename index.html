@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRUNG TÂM DỊCH VỤ TỔNG HỢP ⭐️ — Ken (@TenVipQua)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Be Vietnam Pro"', 'sans-serif'],
+                        display: ['"Space Grotesk"', '"Be Vietnam Pro"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#05060a',
+                        theaterDark: '#0b0e17',
+                        neonCrimson: '#ff0055',
+                        cyberCyan: '#00f2fe',
+                        cinemaGold: '#f5b942',
+                        electricViolet: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Nền đen rạp chiếu phim sâu thẳm */
+        body {
+            background-color: #05060a;
+            color: #F4F5F7;
+            overflow-x: hidden;
+            user-select: none;
+        }
+        input, textarea, select {
+            user-select: text;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #05060a; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00f2fe, #f5b942, #ff0055);
+            border-radius: 9999px;
+        }
+
+        /* Canvas nền đường hầm xoáy & lưới phối cảnh 4D */
+        #cinema-4d-stage {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Hạt phim điện ảnh */
+        .film-grain-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.85) 1px, transparent 0);
+            background-size: 3px 3px;
+        }
+
+        /* Kính mờ Cyberpunk Cinema */
+        .cyber-glass {
+            background: linear-gradient(145deg, rgba(14, 18, 30, 0.8) 0%, rgba(7, 9, 16, 0.92) 100%);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 24px 55px -15px rgba(0, 0, 0, 0.94),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.11);
+        }
+
+        /* Màn chiếu IMAX Hero */
+        .imax-theater-screen {
+            background: radial-gradient(95% 85% at 50% 0%, rgba(0, 242, 254, 0.16) 0%, rgba(245, 185, 66, 0.1) 45%, rgba(5, 6, 10, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow:
+                0 0 90px -20px rgba(0, 242, 254, 0.32),
+                0 0 130px -30px rgba(245, 185, 66, 0.22),
+                inset 0 0 70px rgba(0, 0, 0, 0.94);
+        }
+
+        /* Thẻ Video Showcase 3D Tilt */
+        .video-showcase-card {
+            transform-style: preserve-3d;
+            transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .video-showcase-card:hover {
+            border-color: rgba(0, 242, 254, 0.65);
+            box-shadow:
+                0 25px 60px -12px rgba(0, 0, 0, 0.95),
+                0 0 32px rgba(0, 242, 254, 0.25),
+                0 0 20px rgba(245, 185, 66, 0.16);
+        }
+        .video-showcase-card:hover .play-orb-btn {
+            transform: scale(1.12);
+            box-shadow: 0 0 32px rgba(0, 242, 254, 0.85), 0 0 50px rgba(245, 185, 66, 0.45);
+        }
+
+        /* Nút Play Neon */
+        .play-orb-btn {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.92), rgba(14, 165, 233, 0.95));
+            box-shadow: 0 0 22px rgba(0, 242, 254, 0.55);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        /* Tab chuyên mục */
+        .cat-tab-btn {
+            transition: all 0.22s ease;
+        }
+        .cat-tab-btn.active {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.24) 0%, rgba(245, 185, 66, 0.18) 100%);
+            border-color: #00f2fe;
+            color: #ffffff;
+            box-shadow: 0 0 24px rgba(0, 242, 254, 0.28);
+        }
+
+        /* Hiệu ứng nhảy số đăng ký kênh ảo */
+        .sub-digit-value {
+            display: inline-block;
+            font-variant-numeric: tabular-nums;
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), color 0.32s ease, text-shadow 0.32s ease;
+        }
+        .sub-digit-value.is-ticking {
+            transform: translateY(-2px) scale(1.06);
+            color: #ffffff;
+            text-shadow: 0 0 14px #00f2fe, 0 0 24px #f5b942;
+        }
+
+        /* Nút Neon */
+        .btn-neon-crimson {
+            background: linear-gradient(135deg, #ff0055 0%, #c80042 100%);
+            box-shadow: 0 0 24px rgba(255, 0, 85, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+            transition: all 0.25s ease;
+        }
+        .btn-neon-crimson:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 38px rgba(255, 0, 85, 0.8), 0 0 18px rgba(245, 185, 66, 0.4);
+        }
+
+        .btn-neon-cyan {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.18) 0%, rgba(0, 242, 254, 0.06) 100%);
+            border: 1px solid rgba(0, 242, 254, 0.45);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.18);
+            transition: all 0.25s ease;
+        }
+        .btn-neon-cyan:hover {
+            background: rgba(0, 242, 254, 0.26);
+            border-color: #00f2fe;
+            box-shadow: 0 0 32px rgba(0, 242, 254, 0.45);
+            transform: translateY(-2px);
+        }
+
+        .btn-neon-gold {
+            background: linear-gradient(135deg, #f5b942 0%, #d97706 100%);
+            color: #05060a;
+            box-shadow: 0 0 24px rgba(245, 185, 66, 0.45);
+            transition: all 0.25s ease;
+        }
+        .btn-neon-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 36px rgba(245, 185, 66, 0.75);
+        }
+
+        /* Ẩn thanh cuộn ngang cho dải tab trên mobile */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyberCyan selection:text-obsidian">
+
+    <!-- Sân Khấu Nền 4D Cinema & Lưới Phối Cảnh -->
+    <canvas id="cinema-4d-stage"></canvas>
+    <div class="film-grain-overlay"></div>
+
+    <!-- Thanh Điều Hướng Ghim Trên Cùng -->
+    <header class="fixed top-0 inset-x-0 z-40 px-3 sm:px-8 pt-3">
+        <nav class="max-w-7xl mx-auto cyber-glass rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+            <!-- Logo & Trạng thái Live -->
+            <a href="#hero" class="flex items-center gap-3 group shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyberCyan via-blue-600 to-cinemaGold flex items-center justify-center shadow-lg shadow-cyberCyan/30 group-hover:rotate-6 transition-transform">
+                    <svg class="w-5 h-5 text-obsidian" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5l3.09 6.26L22 8.77l-5 4.87 1.18 6.88L12 17.27l-6.18 3.25L7 13.64 2 8.77l6.91-1.01L12 1.5z"/></svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display font-extrabold text-xs sm:text-base tracking-wide text-white leading-none">TRUNG TÂM DỊCH VỤ TỔNG HỢP</span>
+                        <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-[10px] font-mono font-bold text-emerald-300">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span>LIVE</span>
+                        </span>
+                    </div>
+                    <span class="text-[11px] font-mono tracking-wider text-cyberCyan block mt-0.5">VIDEO SHOWCASE • @TenVipQua</span>
+                </div>
+            </a>
+
+            <!-- Liên kết nhanh 2 Kênh Chính Chủ -->
+            <div class="hidden xl:flex items-center gap-2.5 text-xs font-mono">
+                <a href="https://t.me/LocLaVui" target="_blank" rel="noopener noreferrer"
+                   class="px-3 py-1.5 rounded-xl bg-cyberCyan/10 border border-cyberCyan/30 text-cyberCyan hover:bg-cyberCyan/20 transition-colors flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>@LocLaVui</span>
+                </a>
+                <a href="https://t.me/tangcode66k" target="_blank" rel="noopener noreferrer"
+                   class="px-3 py-1.5 rounded-xl bg-cinemaGold/10 border border-cinemaGold/30 text-cinemaGold hover:bg-cinemaGold/20 transition-colors flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <span>@tangcode66k</span>
+                </a>
+            </div>
+
+            <!-- Nút Quản Lý Video (Admin) & CTA Telegram -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <button type="button" onclick="openAdminModal()"
+                        class="btn-neon-gold font-extrabold text-xs sm:text-sm px-3.5 sm:px-4 py-2.5 rounded-xl flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>Quản Lý Video</span>
+                    <span class="hidden md:inline text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-black/20">Admin</span>
+                </button>
+
+                <a href="https://t.me/TenVipQua" target="_blank" rel="noopener noreferrer"
+                   class="btn-neon-crimson text-white text-xs sm:text-sm font-bold px-3.5 sm:px-4 py-2.5 rounded-xl flex items-center gap-2">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    <span class="hidden sm:inline">@TenVipQua</span>
+                    <span class="sm:hidden">Chat</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Nội Dung Chính -->
+    <main class="relative z-10 pt-24 sm:pt-28 pb-24">
+
+        <!-- 1. HERO SPOTLIGHT & DẢI TÍN NHIỆM KÊNH CHÍNH CHỦ -->
+        <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-8 mb-10">
+            <div class="imax-theater-screen rounded-3xl p-6 sm:p-9 lg:p-11 relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+                    <!-- Cột Trái: Tiêu đề & 5 Trụ Cột -->
+                    <div class="lg:col-span-7 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-cinemaGold/35 text-cinemaGold text-[11px] font-mono uppercase tracking-wider mb-4">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <span>UY TÍN • NHANH • BẢO MẬT • GIÁ RẺ • HIỆU QUẢ</span>
+                        </div>
+
+                        <h1 class="font-display font-black text-2xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.15] text-white mb-4">
+                            Rạp Chiếu Demo Sản Phẩm
+                            <span class="block mt-1 bg-gradient-to-r from-cyberCyan via-white to-cinemaGold bg-clip-text text-transparent">
+                                TRUNG TÂM DỊCH VỤ TỔNG HỢP
+                            </span>
+                        </h1>
+
+                        <p class="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed mb-6 max-w-2xl mx-auto lg:mx-0">
+                            Trải nghiệm trực quan video thực tế các hệ thống <span class="text-cyberCyan font-semibold">Bot Telegram, Tool Auto &amp; Spam, Mini App 3D, Kéo Mem</span> và <span class="text-cinemaGold font-semibold">Source Code VIP</span>. Hỗ trợ đăng tải video mới theo từng chuyên mục ngay trên giao diện.
+                        </p>
+
+                        <!-- 5 Nhãn Cam Kết -->
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-cinemaGold/30 text-xs font-semibold text-cinemaGold">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                                <span>Uy tín</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-cyberCyan/30 text-xs font-semibold text-cyberCyan">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                <span>Nhanh</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-neonCrimson/30 text-xs font-semibold text-neonCrimson">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Bảo mật</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-amber-400/30 text-xs font-semibold text-amber-300">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                <span>Giá rẻ</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 border border-emerald-400/30 text-xs font-semibold text-emerald-400">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                                <span>Hiệu quả</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Cột Phải: Bộ Đếm Cộng Đồng Chính Chủ Trực Tuyến -->
+                    <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5">
+                        <!-- Kênh 1: @LocLaVui -->
+                        <div class="cyber-glass rounded-2xl p-4 border border-cyberCyan/35 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyberCyan to-blue-600 flex items-center justify-center text-obsidian shrink-0 shadow-lg shadow-cyberCyan/25">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <a href="https://t.me/LocLaVui" target="_blank" rel="noopener noreferrer" class="font-display font-extrabold text-sm text-white hover:text-cyberCyan transition-colors">@LocLaVui</a>
+                                        <svg class="w-3.5 h-3.5 text-cyberCyan" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <span class="text-[11px] font-mono text-gray-400">Kênh Chính Chủ 01</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="sub-count-1" class="sub-digit-value font-display font-black text-lg sm:text-xl text-cyberCyan">48.620</span>
+                                <span class="block text-[10px] font-mono text-emerald-400">+18 mem/phút</span>
+                            </div>
+                        </div>
+
+                        <!-- Kênh 2: @tangcode66k -->
+                        <div class="cyber-glass rounded-2xl p-4 border border-cinemaGold/35 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cinemaGold to-orange-600 flex items-center justify-center text-obsidian shrink-0 shadow-lg shadow-cinemaGold/25">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <a href="https://t.me/tangcode66k" target="_blank" rel="noopener noreferrer" class="font-display font-extrabold text-sm text-white hover:text-cinemaGold transition-colors">@tangcode66k</a>
+                                        <svg class="w-3.5 h-3.5 text-cinemaGold" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    </div>
+                                    <span class="text-[11px] font-mono text-gray-400">Kênh Tặng Code 66K</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span id="sub-count-2" class="sub-digit-value font-display font-black text-lg sm:text-xl text-cinemaGold">66.840</span>
+                                <span class="block text-[10px] font-mono text-emerald-400">+24 mem/phút</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. THANH LỌC CHỦ ĐỀ, KHUNG HÌNH & TÌM KIẾM VIDEO -->
+        <section id="video-catalog" class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="cyber-glass rounded-3xl p-4 sm:p-6 mb-8 border border-white/10">
+                <!-- Hàng 1: Dải Tab Chuyên Mục Động -->
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <span class="text-xs font-mono uppercase tracking-wider text-cyberCyan flex items-center gap-1.5">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                        <span>Chuyên Mục Sản Phẩm &amp; Dịch Vụ</span>
+                    </span>
+                    <span id="catalog-stats-label" class="text-xs font-mono text-gray-400">Hiển thị 8 video</span>
+                </div>
+
+                <div id="category-tabs-bar" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-4">
+                    <!-- Các tab chuyên mục render động tại đây -->
+                </div>
+
+                <!-- Hàng 2: Ô Tìm Kiếm & Bộ Lọc Khung Hình (16:9 / 9:16) -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-3 border-t border-white/10">
+                    <div class="md:col-span-7 relative">
+                        <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="search-video-input" placeholder="Tìm kiếm tên sản phẩm, Bot TXCL, Tool Spam, Kéo Mem, Source..."
+                               class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/55 border border-white/15 focus:border-cyberCyan focus:outline-none text-xs sm:text-sm text-white placeholder-gray-500">
+                    </div>
+
+                    <div class="md:col-span-5 flex items-center gap-2">
+                        <button type="button" data-aspect="all" class="aspect-filter-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold border border-cyberCyan bg-cyberCyan/20 text-white transition-all">
+                            Tất cả khung hình
+                        </button>
+                        <button type="button" data-aspect="16:9" class="aspect-filter-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold border border-white/15 bg-black/45 text-gray-300 hover:border-white/35 transition-all flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-cyberCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+                            <span>Ngang 16:9</span>
+                        </button>
+                        <button type="button" data-aspect="9:16" class="aspect-filter-btn flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold border border-white/15 bg-black/45 text-gray-300 hover:border-white/35 transition-all flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-cinemaGold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/></svg>
+                            <span>Dọc 9:16</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. LƯỚI HIỂN THỊ VIDEO SHOWCASE -->
+            <div id="video-showcase-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <!-- Các thẻ Video Showcase được render động tại đây -->
+            </div>
+
+            <!-- Trạng thái không tìm thấy video -->
+            <div id="empty-catalog-state" class="hidden cyber-glass rounded-3xl p-12 text-center my-8">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-center text-gray-400">
+                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-1">Không tìm thấy video phù hợp</h3>
+                <p class="text-xs sm:text-sm text-gray-400 mb-5">Thử đổi từ khóa tìm kiếm, chọn chuyên mục khác hoặc bấm đăng tải video mới.</p>
+                <button type="button" onclick="resetFilters()" class="btn-neon-cyan text-white text-xs font-bold px-5 py-2.5 rounded-xl">
+                    Đặt lại bộ lọc
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. DẢI XÁC MINH KÊNH CHÍNH CHỦ & CAM KẾT -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-8 mt-20">
+            <div class="cyber-glass rounded-3xl p-6 sm:p-8 border border-cinemaGold/30 flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-cinemaGold block mb-1">HỆ THỐNG CHÍNH CHỦ XÁC MINH</span>
+                    <h2 class="font-display font-black text-xl sm:text-2xl text-white mb-2">
+                        Cần Đặt Làm Video Demo Hoặc Triển Khai Sản Phẩm Riêng?
+                    </h2>
+                    <p class="text-xs sm:text-sm text-gray-300">
+                        Liên hệ trực tiếp Admin <span class="text-cyberCyan font-mono font-bold">@TenVipQua</span> hoặc theo dõi 2 kênh chính chủ để nhận bảng giá ưu đãi &amp; quà tặng mỗi ngày.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-3 shrink-0">
+                    <a href="https://t.me/LocLaVui" target="_blank" rel="noopener noreferrer"
+                       class="btn-neon-cyan text-white font-bold text-xs px-4 py-3 rounded-xl flex items-center gap-2">
+                        <svg class="w-4 h-4 text-cyberCyan" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>@LocLaVui</span>
+                    </a>
+                    <a href="https://t.me/tangcode66k" target="_blank" rel="noopener noreferrer"
+                       class="btn-neon-gold font-extrabold text-xs px-4 py-3 rounded-xl flex items-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <span>@tangcode66k</span>
+                    </a>
+                    <a href="https://t.me/TenVipQua" target="_blank" rel="noopener noreferrer"
+                       class="btn-neon-crimson text-white font-bold text-xs px-5 py-3 rounded-xl flex items-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        <span>Chốt Đơn @TenVipQua</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-white/10 bg-black/85 backdrop-blur-xl py-8 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+            <div class="flex items-center gap-2 font-display font-bold text-white">
+                <svg class="w-4 h-4 text-cinemaGold" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5l3.09 6.26L22 8.77l-5 4.87 1.18 6.88L12 17.27l-6.18 3.25L7 13.64 2 8.77l6.91-1.01L12 1.5z"/></svg>
+                <span>TRUNG TÂM DỊCH VỤ TỔNG HỢP</span>
+                <span class="text-gray-500 font-mono font-normal">• Video Showcase Platform</span>
+            </div>
+            <div class="font-mono text-[11px] text-gray-400">
+                Uy tín – Nhanh – Bảo mật – Giá rẻ – Hiệu quả
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 1: RẠP CHIẾU VIDEO 18+ ( VIDEO PLAYER MODAL)             -->
+    <!-- ===================================================================== -->
+    <div id="theater-player-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-lg">
+        <div class="cyber-glass w-full max-w-5xl rounded-3xl border border-cyberCyan/45 overflow-hidden flex flex-col max-h-[94vh]">
+            <!-- Thanh tiêu đề Rạp Chiếu -->
+            <div class="px-5 py-3.5 border-b border-white/10 flex items-center justify-between gap-3 bg-black/40">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span id="player-cat-badge" class="px-2.5 py-1 rounded-lg bg-cyberCyan/15 border border-cyberCyan/40 text-cyberCyan text-[11px] font-mono font-bold shrink-0"></span>
+                    <span id="player-aspect-badge" class="px-2 py-0.5 rounded bg-white/10 text-gray-300 text-[10px] font-mono shrink-0">16:9</span>
+                    <h3 id="player-modal-title" class="font-display font-bold text-sm sm:text-base text-white truncate"></h3>
+                </div>
+                <button type="button" onclick="closeTheaterModal()" aria-label="Đóng rạp chiếu"
+                        class="w-9 h-9 rounded-xl bg-white/10 hover:bg-neonCrimson text-white flex items-center justify-center transition-colors shrink-0">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <!-- Khung Chiếu Video (Tự động co giãn 16:9 hoặc 9:16) -->
+            <div class="bg-black flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+                <div id="player-stage-container" class="w-full aspect-video max-h-[56vh] rounded-2xl overflow-hidden border border-white/10 bg-[#030408] relative flex items-center justify-center shadow-2xl">
+                    <!-- Video HTML5 hoặc Iframe sẽ được gắn vào đây -->
+                </div>
+            </div>
+
+            <!-- Thông tin sản phẩm & Nút Chốt Đơn -->
+            <div class="p-5 sm:p-6 border-t border-white/10 bg-theaterDark/90 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div class="space-y-1.5 max-w-2xl">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="player-promo-badge" class="px-2.5 py-0.5 rounded-md bg-cinemaGold/20 border border-cinemaGold/40 text-cinemaGold text-xs font-mono font-bold"></span>
+                        <span id="player-views-text" class="text-xs font-mono text-gray-400"></span>
+                    </div>
+                    <p id="player-modal-desc" class="text-xs sm:text-sm text-gray-300 leading-relaxed"></p>
+                </div>
+
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0">
+                    <button type="button" id="player-copy-btn"
+                            class="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-bold flex items-center gap-1.5 transition-colors">
+                        <svg class="w-4 h-4 text-cyberCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        <span>Copy Tên Mẫu</span>
+                    </button>
+
+                    <a id="player-telegram-cta" href="https://t.me/TenVipQua" target="_blank" rel="noopener noreferrer"
+                       class="btn-neon-crimson text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl flex items-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        <span>Chốt Đơn Mẫu Video Này Qua @TenVipQua</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 2: STUDIO QUẢN LÝ VIDEO & CHỦ ĐỀ (ADMIN DRAWER / MODAL)         -->
+    <!-- ===================================================================== -->
+    <div id="admin-studio-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-lg">
+        <div class="cyber-glass w-full max-w-4xl rounded-3xl border border-cinemaGold/45 overflow-hidden flex flex-col max-h-[92vh]">
+            <!-- Header Admin -->
+            <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black/40">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-cinemaGold/20 border border-cinemaGold/50 flex items-center justify-center text-cinemaGold">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-black text-base sm:text-lg text-white">Studio Quản Lý Video &amp; Chủ Đề</h3>
+                        <p class="text-[11px] font-mono text-gray-400">Tải video từ máy tính, gắn link MP4/YouTube &amp; phân loại chuyên mục</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAdminModal()" aria-label="Đóng quản lý"
+                        class="w-9 h-9 rounded-xl bg-white/10 hover:bg-neonCrimson text-white flex items-center justify-center transition-colors">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <!-- Thanh Chuyển Tab Admin -->
+            <div class="px-6 pt-3 border-b border-white/10 flex items-center gap-2 bg-black/25">
+                <button type="button" id="admin-tab-upload" onclick="switchAdminTab('upload')"
+                        class="px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-cyberCyan text-cyberCyan bg-cyberCyan/10 transition-all">
+                    1. Đăng Video Mới
+                </button>
+                <button type="button" id="admin-tab-manage" onclick="switchAdminTab('manage')"
+                        class="px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition-all">
+                    2. Danh Sách &amp; Xuất JSON (<span id="admin-total-count">8</span>)
+                </button>
+            </div>
+
+            <!-- Nội Dung Tab 1: Form Đăng Video Mới -->
+            <div id="admin-panel-upload" class="p-6 overflow-y-auto space-y-5">
+                <form id="upload-video-form" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-1.5">Tiêu đề Video / Tên Sản Phẩm *</label>
+                            <input type="text" id="vid-title" required placeholder="VD: Demo Bot Room TXCL 3D Tự Động 2026"
+                                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-1.5">Nhãn Giá / Khuyến Mãi</label>
+                            <input type="text" id="vid-promo" placeholder="VD: Full Source • Giá Ưu Đãi"
+                                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white">
+                        </div>
+                    </div>
+
+                    <!-- Chọn Chủ Đề hoặc Tạo Chủ Đề Mới -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-cyberCyan mb-1.5">Chọn Chủ Đề / Chuyên Mục *</label>
+                            <select id="vid-category-select"
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-black/70 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white">
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-cinemaGold mb-1.5">Hoặc Tạo Chủ Đề Mới (Tùy chọn)</label>
+                            <input type="text" id="vid-new-category" placeholder="Nhập tên chủ đề mới nếu muốn tạo..."
+                                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-cinemaGold/35 focus:border-cinemaGold focus:outline-none text-sm text-white">
+                        </div>
+                    </div>
+
+                    <!-- Nguồn Video: File Máy Tính hoặc Link URL -->
+                    <div class="rounded-2xl bg-black/45 border border-white/10 p-4 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-mono uppercase tracking-wider text-white">Nguồn Video Quảng Bá *</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" id="src-mode-file" onclick="setVideoSourceMode('file')"
+                                        class="px-3 py-1 rounded-lg text-xs font-bold bg-cyberCyan text-obsidian transition-all">
+                                    Chọn File Từ Máy (.mp4)
+                                </button>
+                                <button type="button" id="src-mode-url" onclick="setVideoSourceMode('url')"
+                                        class="px-3 py-1 rounded-lg text-xs font-bold bg-white/10 text-gray-300 hover:text-white transition-all">
+                                    Dán Link Video / YouTube
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chọn file nội bộ -->
+                        <div id="source-input-file-box">
+                            <label for="vid-file-input" class="flex flex-col items-center justify-center p-5 border-2 border-dashed border-cyberCyan/40 hover:border-cyberCyan rounded-xl bg-cyberCyan/5 cursor-pointer transition-colors">
+                                <svg class="w-8 h-8 text-cyberCyan mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <span id="selected-file-label" class="text-xs sm:text-sm font-semibold text-white">Bấm để chọn tệp video (.mp4, .webm, .mov) từ thiết bị</span>
+                                <span class="text-[11px] font-mono text-gray-400 mt-1">Phát xem trước tức thì trong rạp chiếu 4D</span>
+                            </label>
+                            <input type="file" id="vid-file-input" accept="video/mp4,video/webm,video/quicktime" class="hidden">
+                        </div>
+
+                        <!-- Nhập URL video -->
+                        <div id="source-input-url-box" class="hidden">
+                            <input type="url" id="vid-url-input" placeholder="https://example.com/video-demo.mp4 hoặc https://youtu.be/..."
+                                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/70 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white">
+                        </div>
+                    </div>
+
+                    <!-- Khung hình & Ảnh bìa tùy chọn -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-1.5">Tỷ Lệ Khung Hình Video</label>
+                            <select id="vid-aspect"
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-black/70 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white">
+                                <option value="16:9">Ngang 16:9 (Widescreen Demo)</option>
+                                <option value="9:16">Dọc 9:16 (Shorts / Reels / Mobile)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-1.5">Link Ảnh Bìa Thumbnail (Để trống sẽ tự tạo)</label>
+                            <input type="url" id="vid-thumb-input" placeholder="https://... (Không bắt buộc)"
+                                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-1.5">Mô Tả Chi Tiết Sản Phẩm / Dịch Vụ</label>
+                        <textarea id="vid-desc" rows="2" placeholder="Mô tả tính năng nổi bật, ưu đãi và thông số kỹ thuật..."
+                                  class="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 focus:border-cyberCyan focus:outline-none text-sm text-white"></textarea>
+                    </div>
+
+                    <div class="pt-2 flex justify-end gap-3">
+                        <button type="button" onclick="closeAdminModal()" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs sm:text-sm font-bold text-gray-200">
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn-neon-gold font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-xl flex items-center gap-2">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Đăng Video Lên Trang</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Nội Dung Tab 2: Danh Sách & Xuất/Nhập JSON -->
+            <div id="admin-panel-manage" class="hidden p-6 overflow-y-auto space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="exportVideosJson()"
+                                class="btn-neon-cyan text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-cyberCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span>Xuất File videos.json</span>
+                        </button>
+                        <label class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white cursor-pointer flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-cinemaGold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span>Nhập JSON</span>
+                            <input type="file" id="import-json-input" accept=".json,application/json" class="hidden">
+                        </label>
+                    </div>
+
+                    <button type="button" onclick="restoreDefaultVideos()"
+                            class="px-3 py-2 rounded-xl bg-neonCrimson/15 hover:bg-neonCrimson/30 border border-neonCrimson/40 text-neonCrimson text-xs font-bold transition-colors">
+                        Khôi Phục Mặc Định
+                    </button>
+                </div>
+
+                <div id="admin-video-list" class="space-y-2.5">
+                    <!-- Danh sách video quản trị render động -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông Báo Toast Góc Dưới -->
+    <div id="cinema-toast" class="fixed bottom-5 right-5 z-50 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="cyber-glass px-4 py-3 rounded-2xl border border-cyberCyan/60 flex items-center gap-3 shadow-2xl">
+            <svg class="w-5 h-5 text-cyberCyan shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span id="cinema-toast-msg" class="text-xs sm:text-sm font-semibold text-white"></span>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. DỮ LIỆU MẪU 8 VIDEO QUẢNG BÁ ĐA CHỦ ĐỀ (SỬ DỤNG LUỒNG MP4 CÔNG KHAI)
+        // =========================================================================
+        const STORAGE_KEY = 'ttdv_video_showcase_v1';
+
+        const DEFAULT_VIDEOS = [
+            {
+                id: 'vid-txcl-3d',
+                title: 'Source BOT ROOM TXCL 3D Mini App Tự Động',
+                category: 'Bot Telegram',
+                aspect: '16:9',
+                duration: '01:45',
+                promo: 'Full Source • Giá Ưu Đãi',
+                views: '14.8K',
+                pinned: true,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                thumbGradient: 'from-cyan-500/30 via-blue-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Hệ thống Bot Room TXCL tích hợp Mini App 3D mượt mà, xử lý phiên tự động tốc độ cao, nạp rút QR tự động và bảng Admin quản trị tập trung.'
+            },
+            {
+                id: 'vid-bot-shop',
+                title: 'BOT SHOP BÁN HÀNG Tự Động 24/7 + Auto Bank',
+                category: 'Bot Telegram',
+                aspect: '16:9',
+                duration: '02:10',
+                promo: 'Hot 2026 • Cài Đặt A-Z',
+                views: '11.2K',
+                pinned: false,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+                thumbGradient: 'from-amber-500/30 via-orange-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Bot bán tài khoản & sản phẩm số tự động hoàn toàn: check biến động số dư ngân hàng 3 giây, trả hàng tức thì, chiết khấu đại lý VIP.'
+            },
+            {
+                id: 'vid-tool-spam',
+                title: 'TOOL SPAM & BOT SPAM Đa Luồng Chống Limit',
+                category: 'Tool Auto & Spam',
+                aspect: '9:16',
+                duration: '00:58',
+                promo: 'Tốc Độ Cao • Đa Tài Khoản',
+                views: '19.4K',
+                pinned: true,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+                thumbGradient: 'from-rose-500/30 via-purple-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Công cụ gửi tin nhắn quảng bá tự động đa luồng, hỗ trợ spin nội dung thông minh, hẹn giờ theo lịch và đính kèm nút bấm điều hướng.'
+            },
+            {
+                id: 'vid-miniapp-3d',
+                title: 'Giao Diện Web & Telegram Mini App 3D Tương Tác',
+                category: 'Mini App & Game 3D',
+                aspect: '16:9',
+                duration: '01:32',
+                promo: 'Thiết Kế Độc Quyền',
+                views: '9.7K',
+                pinned: false,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoy.mp4',
+                thumbGradient: 'from-indigo-500/30 via-cyan-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Xây dựng giao diện Web App / Telegram Mini App hiệu ứng 3D chuẩn rạp chiếu tối, tối ưu mượt mà trên cả iOS, Android và Desktop.'
+            },
+            {
+                id: 'vid-keo-mem',
+                title: 'Dịch Vụ KÉO MEM Thực • Ghim Bài QC • Treo Banner',
+                category: 'Quảng Cáo & Kéo Mem',
+                aspect: '9:16',
+                duration: '00:45',
+                promo: 'Giá Rẻ Tận Gốc',
+                views: '22.1K',
+                pinned: false,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+                thumbGradient: 'from-emerald-500/30 via-teal-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Tăng trưởng thành viên kênh/nhóm Telegram đúng tệp khách hàng, ghim bài quảng cáo vị trí vàng tiếp cận hàng vạn lượt xem mỗi ngày.'
+            },
+            {
+                id: 'vid-check-clone',
+                title: 'Module CHECK CLONE & Tích Hợp ICON PREMIUM VIP',
+                category: 'Source Code VIP',
+                aspect: '16:9',
+                duration: '01:18',
+                promo: 'Bảo Mật Tuyệt Đối',
+                views: '8.5K',
+                pinned: false,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+                thumbGradient: 'from-yellow-500/30 via-amber-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Bộ lọc nhận diện tài khoản ảo/clone tự động chống cheat nhiệm vụ, kết hợp hiển thị Custom Emoji Icon Premium động đẳng cấp.'
+            },
+            {
+                id: 'vid-bot-nhiem-vu',
+                title: 'BOT NHIỆM VỤ Điểm Danh & Hệ Thống Giới Thiệu Đa Tầng',
+                category: 'Bot Telegram',
+                aspect: '9:16',
+                duration: '01:05',
+                promo: 'Bùng Nổ Thành Viên',
+                views: '13.6K',
+                pinned: false,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
+                thumbGradient: 'from-purple-500/30 via-fuchsia-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Tự động kiểm tra điều kiện tham gia kênh/nhóm trước khi cộng điểm thưởng, tích hợp link mời bạn bè & bảng xếp hạng top.'
+            },
+            {
+                id: 'vid-code-stk',
+                title: 'Code Tên Nhân Vật / Đối Soát STK Ngân Hàng Tự Động',
+                category: 'Source Code VIP',
+                aspect: '16:9',
+                duration: '01:54',
+                promo: 'Code Theo Yêu Cầu',
+                views: '10.3K',
+                pinned: false,
+                videoType: 'mp4',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+                thumbGradient: 'from-sky-500/30 via-slate-900/60 to-obsidian',
+                thumbUrl: '',
+                description: 'Lập trình module khởi tạo & kiểm tra tên nhân vật đồng bộ API ngân hàng xử lý giao dịch STK chính xác từng giây.'
+            }
+        ];
+
+        // Trạng thái ứng dụng
+        let videosCatalog = [];
+        let activeCategory = 'Tất Cả';
+        let activeAspect = 'all';
+        let searchQuery = '';
+        let sourceInputMode = 'file';
+
+        // Khởi tạo dữ liệu từ localStorage hoặc dùng mặc định
+        function loadCatalog() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        videosCatalog = parsed;
+                        return;
+                    }
+                }
+            } catch (e) {
+                // Bỏ qua lỗi đọc storage và dùng mặc định
+            }
+            videosCatalog = [...DEFAULT_VIDEOS];
+        }
+
+        function saveCatalog() {
+            try {
+                // Chỉ lưu các video có URL bền vững (không lưu blob: tạm thời nếu quá giới hạn)
+                const serializable = videosCatalog.map(v => ({
+                    ...v,
+                    isLocalSession: v.videoUrl.startsWith('blob:')
+                }));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
+            } catch (e) {
+                // Bỏ qua nếu bộ nhớ đầy
+            }
+        }
+
+        // =========================================================================
+        // 2. RENDER DẢI TAB CHUYÊN MỤC & LƯỚI VIDEO SHOWCASE
+        // =========================================================================
+        function getAllCategories() {
+            const baseCats = [
+                'Bot Telegram',
+                'Tool Auto & Spam',
+                'Mini App & Game 3D',
+                'Quảng Cáo & Kéo Mem',
+                'Source Code VIP'
+            ];
+            const dynamicCats = videosCatalog.map(v => v.category);
+            return ['Tất Cả', ...Array.from(new Set([...baseCats, ...dynamicCats]))];
+        }
+
+        function renderCategoryTabs() {
+            const tabsBar = document.getElementById('category-tabs-bar');
+            const categories = getAllCategories();
+
+            tabsBar.innerHTML = categories.map(cat => {
+                const count = cat === 'Tất Cả'
+                    ? videosCatalog.length
+                    : videosCatalog.filter(v => v.category === cat).length;
+                const isActive = activeCategory === cat;
+
+                return `
+                    <button type="button" onclick="selectCategory('${cat.replace(/'/g, "\\'")}')"
+                            class="cat-tab-btn shrink-0 px-3.5 py-2 rounded-xl border text-xs font-bold flex items-center gap-2 ${isActive ? 'active' : 'border-white/10 bg-black/45 text-gray-300 hover:border-white/30 hover:text-white'}">
+                        <span>${cat}</span>
+                        <span class="px-1.5 py-0.5 rounded-md text-[10px] font-mono ${isActive ? 'bg-cyberCyan text-obsidian font-extrabold' : 'bg-white/10 text-gray-300'}">${count}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // Đồng bộ danh sách chủ đề trong form Admin
+            const selectEl = document.getElementById('vid-category-select');
+            if (selectEl) {
+                const formCats = categories.filter(c => c !== 'Tất Cả');
+                selectEl.innerHTML = formCats.map(c => `<option value="${c}">${c}</option>`).join('');
+            }
+        }
+
+        function selectCategory(cat) {
+            activeCategory = cat;
+            renderCategoryTabs();
+            renderVideoGrid();
+        }
+
+        function getFilteredVideos() {
+            return videosCatalog
+                .filter(v => {
+                    const matchCat = activeCategory === 'Tất Cả' || v.category === activeCategory;
+                    const matchAspect = activeAspect === 'all' || v.aspect === activeAspect;
+                    const q = searchQuery.toLowerCase().trim();
+                    const matchSearch = !q ||
+                        v.title.toLowerCase().includes(q) ||
+                        v.description.toLowerCase().includes(q) ||
+                        v.category.toLowerCase().includes(q) ||
+                        (v.promo && v.promo.toLowerCase().includes(q));
+                    return matchCat && matchAspect && matchSearch;
+                })
+                .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+        }
+
+        function renderVideoGrid() {
+            const grid = document.getElementById('video-showcase-grid');
+            const emptyState = document.getElementById('empty-catalog-state');
+            const statsLabel = document.getElementById('catalog-stats-label');
+            const filtered = getFilteredVideos();
+
+            statsLabel.textContent = `Hiển thị ${filtered.length} / ${videosCatalog.length} video`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(vid => {
+                const isVertical = vid.aspect === '9:16';
+                const tgMsg = encodeURIComponent(`Xin chào Admin @TenVipQua, mình quan tâm mẫu sản phẩm trong video:\n• Tên: ${vid.title}\n• Chuyên mục: ${vid.category}\nNhờ Admin tư vấn & báo giá giúp mình!`);
+
+                const mediaPreviewHtml = vid.videoType === 'youtube'
+                    ? `<div class="w-full h-full bg-gradient-to-br ${vid.thumbGradient || 'from-cyan-500/30 to-obsidian'} flex flex-col items-center justify-center p-4 text-center">
+                           <span class="px-2.5 py-1 rounded-lg bg-red-600/80 text-white text-[10px] font-mono font-bold mb-2">YOUTUBE DEMO</span>
+                           <span class="font-display font-bold text-xs text-white/90 line-clamp-2">${vid.title}</span>
+                       </div>`
+                    : `<video src="${vid.videoUrl}" muted loop playsinline preload="metadata"
+                              class="preview-hover-video w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity"></video>`;
+
+                return `
+                    <article class="video-showcase-card cyber-glass rounded-3xl overflow-hidden flex flex-col justify-between group border border-white/10">
+                        <div>
+                            <!-- Khung Video Preview -->
+                            <div onclick="openTheaterModal('${vid.id}')"
+                                 class="relative aspect-video bg-black overflow-hidden cursor-pointer border-b border-white/10">
+                                ${vid.thumbUrl
+                                    ? `<img src="${vid.thumbUrl}" alt="${vid.title}" onerror="this.style.display='none'" class="w-full h-full object-cover">`
+                                    : mediaPreviewHtml
+                                }
+
+                                <!-- Lớp phủ tối nhẹ -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#05060a] via-transparent to-black/40 pointer-events-none"></div>
+
+                                <!-- Nhãn góc trên -->
+                                <div class="absolute top-3 inset-x-3 flex items-center justify-between gap-1.5 pointer-events-none">
+                                    <span class="px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-cyberCyan/40 text-cyberCyan text-[10px] font-mono font-bold truncate max-w-[68%]">
+                                        ${vid.category}
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-mono text-gray-200 flex items-center gap-1">
+                                        ${isVertical
+                                            ? '<svg class="w-3 h-3 text-cinemaGold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="2" width="12" height="20" rx="2"/></svg>'
+                                            : '<svg class="w-3 h-3 text-cyberCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="6" width="20" height="12" rx="2"/></svg>'
+                                        }
+                                        <span>${vid.aspect}</span>
+                                    </span>
+                                </div>
+
+                                <!-- Nút Play Neon ở tâm -->
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="play-orb-btn w-12 h-12 rounded-full flex items-center justify-center text-obsidian">
+                                        <svg class="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                    </div>
+                                </div>
+
+                                <!-- Nhãn góc dưới: Ghim + Thời lượng -->
+                                <div class="absolute bottom-2.5 inset-x-3 flex items-center justify-between pointer-events-none">
+                                    ${vid.pinned
+                                        ? `<span class="px-2 py-0.5 rounded bg-cinemaGold text-obsidian text-[10px] font-mono font-extrabold uppercase flex items-center gap-1">
+                                               <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                               <span>Nổi bật</span>
+                                           </span>`
+                                        : '<span></span>'
+                                    }
+                                    <span class="px-2 py-0.5 rounded bg-black/80 text-[10px] font-mono text-white border border-white/10">
+                                        ${vid.duration || 'HD'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Nội dung mô tả sản phẩm -->
+                            <div class="p-4 sm:p-5">
+                                <div class="flex items-center justify-between gap-2 mb-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-cinemaGold/15 border border-cinemaGold/35 text-cinemaGold text-[10px] font-mono font-bold">
+                                        ${vid.promo || 'Báo Giá Ưu Đãi'}
+                                    </span>
+                                    <span class="text-[11px] font-mono text-gray-400 flex items-center gap-1">
+                                        <svg class="w-3.5 h-3.5 text-cyberCyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <span>${vid.views || '1.2K'}</span>
+                                    </span>
+                                </div>
+
+                                <h3 onclick="openTheaterModal('${vid.id}')"
+                                    class="font-display font-extrabold text-base text-white group-hover:text-cyberCyan transition-colors leading-snug mb-2 cursor-pointer line-clamp-2">
+                                    ${vid.title}
+                                </h3>
+
+                                <p class="text-xs text-gray-300 leading-relaxed line-clamp-2">
+                                    ${vid.description}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 2 Nút Hành Động -->
+                        <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 flex items-center gap-2">
+                            <button type="button" onclick="openTheaterModal('${vid.id}')"
+                                    class="flex-1 btn-neon-cyan text-white font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-cyberCyan" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <span>Xem Video</span>
+                            </button>
+                            <a href="https://t.me/TenVipQua?text=${tgMsg}" target="_blank" rel="noopener noreferrer"
+                               class="flex-1 btn-neon-crimson text-white font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                <span>Đặt Mẫu Này</span>
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            attachCardInteractions();
+        }
+
+        // Gắn hiệu ứng Hover Preview Video & 3D Tilt cho các thẻ
+        function attachCardInteractions() {
+            document.querySelectorAll('.video-showcase-card').forEach(card => {
+                const vidEl = card.querySelector('.preview-hover-video');
+
+                card.addEventListener('mouseenter', () => {
+                    if (vidEl && vidEl.paused) {
+                        vidEl.play().catch(() => {});
+                    }
+                });
+
+                card.addEventListener('mousemove', (e) => {
+                    if (window.innerWidth < 768) return;
+                    const rect = card.getBoundingClientRect();
+                    const rx = ((e.clientY - rect.top) / rect.height - 0.5) * -8;
+                    const ry = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+                    card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                    if (vidEl && !vidEl.paused) {
+                        vidEl.pause();
+                    }
+                });
+            });
+        }
+
+        // Bộ lọc tìm kiếm & tỷ lệ khung hình
+        document.getElementById('search-video-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderVideoGrid();
+        });
+
+        document.querySelectorAll('.aspect-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activeAspect = btn.dataset.aspect;
+                document.querySelectorAll('.aspect-filter-btn').forEach(b => {
+                    b.classList.remove('border-cyberCyan', 'bg-cyberCyan/20', 'text-white');
+                    b.classList.add('border-white/15', 'bg-black/45', 'text-gray-300');
+                });
+                btn.classList.remove('border-white/15', 'bg-black/45', 'text-gray-300');
+                btn.classList.add('border-cyberCyan', 'bg-cyberCyan/20', 'text-white');
+                renderVideoGrid();
+            });
+        });
+
+        function resetFilters() {
+            activeCategory = 'Tất Cả';
+            activeAspect = 'all';
+            searchQuery = '';
+            document.getElementById('search-video-input').value = '';
+            document.querySelectorAll('.aspect-filter-btn').forEach((b, idx) => {
+                if (idx === 0) {
+                    b.classList.add('border-cyberCyan', 'bg-cyberCyan/20', 'text-white');
+                    b.classList.remove('border-white/15', 'bg-black/45', 'text-gray-300');
+                } else {
+                    b.classList.remove('border-cyberCyan', 'bg-cyberCyan/20', 'text-white');
+                    b.classList.add('border-white/15', 'bg-black/45', 'text-gray-300');
+                }
+            });
+            renderCategoryTabs();
+            renderVideoGrid();
+        }
+
+        // =========================================================================
+        // 3. RẠP CHIẾU VIDEO (THEATER MODE PLAYER MODAL)
+        // =========================================================================
+        const theaterModal = document.getElementById('theater-player-modal');
+        const playerStage = document.getElementById('player-stage-container');
+
+        function extractYouTubeEmbedUrl(url) {
+            const regExp = /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regExp);
+            return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0` : null;
+        }
+
+        function openTheaterModal(videoId) {
+            const vid = videosCatalog.find(v => v.id === videoId);
+            if (!vid) return;
+
+            document.getElementById('player-cat-badge').textContent = vid.category;
+            document.getElementById('player-aspect-badge').textContent = vid.aspect;
+            document.getElementById('player-modal-title').textContent = vid.title;
+            document.getElementById('player-promo-badge').textContent = vid.promo || 'Báo Giá Ưu Đãi';
+            document.getElementById('player-views-text').textContent = `${vid.views || '1.5K'} lượt xem demo`;
+            document.getElementById('player-modal-desc').textContent = vid.description;
+
+            // Điều chỉnh khung hình 16:9 hoặc 9:16
+            if (vid.aspect === '9:16') {
+                playerStage.className = 'w-full max-w-[330px] aspect-[9/16] max-h-[62vh] rounded-2xl overflow-hidden border border-cinemaGold/40 bg-black relative flex items-center justify-center shadow-2xl';
+            } else {
+                playerStage.className = 'w-full aspect-video max-h-[58vh] rounded-2xl overflow-hidden border border-cyberCyan/35 bg-black relative flex items-center justify-center shadow-2xl';
+            }
+
+            const ytEmbed = extractYouTubeEmbedUrl(vid.videoUrl);
+            if (ytEmbed) {
+                playerStage.innerHTML = `<iframe src="${ytEmbed}" class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+            } else {
+                playerStage.innerHTML = `<video src="${vid.videoUrl}" controls autoplay playsinline class="w-full h-full object-contain bg-black"></video>`;
+            }
+
+            const tgText = encodeURIComponent(`Xin chào Admin @TenVipQua, mình vừa xem video demo:\n• Sản phẩm: ${vid.title}\n• Chuyên mục: ${vid.category}\nNhờ Admin tư vấn chi tiết & báo giá giúp mình!`);
+            document.getElementById('player-telegram-cta').href = `https://t.me/TenVipQua?text=${tgText}`;
+
+            document.getElementById('player-copy-btn').onclick = () => {
+                copyText(`${vid.title} (${vid.category})`, 'Đã sao chép tên mẫu sản phẩm!');
+            };
+
+            theaterModal.classList.remove('hidden');
+            theaterModal.classList.add('flex');
+        }
+
+        function closeTheaterModal() {
+            playerStage.innerHTML = ''; // Dừng phát video ngay khi đóng
+            theaterModal.classList.add('hidden');
+            theaterModal.classList.remove('flex');
+        }
+
+        theaterModal.addEventListener('click', (e) => {
+            if (e.target === theaterModal) closeTheaterModal();
+        });
+
+        // =========================================================================
+        // 4. STUDIO QUẢN LÝ VIDEO & CHỦ ĐỀ (ADMIN MODAL)
+        // =========================================================================
+        const adminModal = document.getElementById('admin-studio-modal');
+
+        function openAdminModal() {
+            renderCategoryTabs();
+            renderAdminVideoList();
+            adminModal.classList.remove('hidden');
+            adminModal.classList.add('flex');
+        }
+
+        function closeAdminModal() {
+            adminModal.classList.add('hidden');
+            adminModal.classList.remove('flex');
+        }
+
+        adminModal.addEventListener('click', (e) => {
+            if (e.target === adminModal) closeAdminModal();
+        });
+
+        function switchAdminTab(tab) {
+            const tabUpload = document.getElementById('admin-tab-upload');
+            const tabManage = document.getElementById('admin-tab-manage');
+            const panelUpload = document.getElementById('admin-panel-upload');
+            const panelManage = document.getElementById('admin-panel-manage');
+
+            if (tab === 'upload') {
+                tabUpload.className = 'px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-cyberCyan text-cyberCyan bg-cyberCyan/10 transition-all';
+                tabManage.className = 'px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition-all';
+                panelUpload.classList.remove('hidden');
+                panelManage.classList.add('hidden');
+            } else {
+                tabManage.className = 'px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-cinemaGold text-cinemaGold bg-cinemaGold/10 transition-all';
+                tabUpload.className = 'px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition-all';
+                panelManage.classList.remove('hidden');
+                panelUpload.classList.add('hidden');
+                renderAdminVideoList();
+            }
+        }
+
+        function setVideoSourceMode(mode) {
+            sourceInputMode = mode;
+            const btnFile = document.getElementById('src-mode-file');
+            const btnUrl = document.getElementById('src-mode-url');
+            const boxFile = document.getElementById('source-input-file-box');
+            const boxUrl = document.getElementById('source-input-url-box');
+
+            if (mode === 'file') {
+                btnFile.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-cyberCyan text-obsidian transition-all';
+                btnUrl.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-white/10 text-gray-300 hover:text-white transition-all';
+                boxFile.classList.remove('hidden');
+                boxUrl.classList.add('hidden');
+            } else {
+                btnUrl.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-cyberCyan text-obsidian transition-all';
+                btnFile.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-white/10 text-gray-300 hover:text-white transition-all';
+                boxUrl.classList.remove('hidden');
+                boxFile.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('vid-file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const label = document.getElementById('selected-file-label');
+            if (file) {
+                label.textContent = `Đã chọn: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+                label.classList.add('text-cyberCyan');
+            } else {
+                label.textContent = 'Bấm để chọn tệp video (.mp4, .webm, .mov) từ thiết bị';
+                label.classList.remove('text-cyberCyan');
+            }
+        });
+
+        // Xử lý Đăng Video Mới
+        document.getElementById('upload-video-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('vid-title').value.trim();
+            const promo = document.getElementById('vid-promo').value.trim() || 'Mới Đăng • Giá Ưu Đãi';
+            const selectedCat = document.getElementById('vid-category-select').value;
+            const newCat = document.getElementById('vid-new-category').value.trim();
+            const category = newCat || selectedCat;
+            const aspect = document.getElementById('vid-aspect').value;
+            const thumbUrl = document.getElementById('vid-thumb-input').value.trim();
+            const description = document.getElementById('vid-desc').value.trim() || 'Video giới thiệu chi tiết sản phẩm & dịch vụ tại Trung Tâm Dịch Vụ Tổng Hợp.';
+
+            let finalVideoUrl = '';
+            let videoType = 'mp4';
+
+            if (sourceInputMode === 'file') {
+                const fileInput = document.getElementById('vid-file-input');
+                const file = fileInput.files[0];
+                if (!file) {
+                    showToast('Vui lòng chọn tệp video từ máy tính hoặc chuyển sang dán link!');
+                    return;
+                }
+                finalVideoUrl = URL.createObjectURL(file);
+            } else {
+                const rawUrl = document.getElementById('vid-url-input').value.trim();
+                if (!rawUrl) {
+                    showToast('Vui lòng nhập đường dẫn video (MP4 hoặc YouTube)!');
+                    return;
+                }
+                finalVideoUrl = rawUrl;
+                if (extractYouTubeEmbedUrl(rawUrl)) {
+                    videoType = 'youtube';
+                }
+            }
+
+            const newVideoItem = {
+                id: 'vid-' + Date.now(),
+                title,
+                category,
+                aspect,
+                duration: 'NEW',
+                promo,
+                views: '128',
+                pinned: true,
+                videoType,
+                videoUrl: finalVideoUrl,
+                thumbGradient: 'from-cyberCyan/35 via-indigo-900/60 to-obsidian',
+                thumbUrl,
+                description
+            };
+
+            videosCatalog.unshift(newVideoItem);
+            saveCatalog();
+
+            activeCategory = category;
+            renderCategoryTabs();
+            renderVideoGrid();
+            renderAdminVideoList();
+
+            // Reset form
+            e.target.reset();
+            document.getElementById('selected-file-label').textContent = 'Bấm để chọn tệp video (.mp4, .webm, .mov) từ thiết bị';
+            closeAdminModal();
+            showToast(`Đã đăng video "${title}" vào chủ đề ${category}!`);
+        });
+
+        function renderAdminVideoList() {
+            const listEl = document.getElementById('admin-video-list');
+            document.getElementById('admin-total-count').textContent = videosCatalog.length;
+
+            listEl.innerHTML = videosCatalog.map(v => `
+                <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded bg-cyberCyan/15 text-cyberCyan text-[10px] font-mono font-bold">${v.category}</span>
+                            <span class="text-[10px] font-mono text-gray-400">${v.aspect}</span>
+                            ${v.pinned ? '<span class="px-1.5 py-0.5 rounded bg-cinemaGold/20 text-cinemaGold text-[10px] font-mono font-bold">Đã Ghim</span>' : ''}
+                        </div>
+                        <h4 class="font-display font-bold text-sm text-white truncate">${v.title}</h4>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="togglePinVideo('${v.id}')"
+                                class="px-3 py-1.5 rounded-xl text-xs font-bold border ${v.pinned ? 'border-cinemaGold bg-cinemaGold/20 text-cinemaGold' : 'border-white/15 bg-white/5 text-gray-300 hover:text-white'}">
+                            ${v.pinned ? 'Bỏ Ghim' : 'Ghim Đầu'}
+                        </button>
+                        <button type="button" onclick="deleteVideoItem('${v.id}')"
+                                class="px-3 py-1.5 rounded-xl bg-neonCrimson/15 hover:bg-neonCrimson text-neonCrimson hover:text-white border border-neonCrimson/35 text-xs font-bold transition-colors">
+                            Xóa
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function togglePinVideo(id) {
+            const item = videosCatalog.find(v => v.id === id);
+            if (item) {
+                item.pinned = !item.pinned;
+                saveCatalog();
+                renderVideoGrid();
+                renderAdminVideoList();
+            }
+        }
+
+        function deleteVideoItem(id) {
+            videosCatalog = videosCatalog.filter(v => v.id !== id);
+            saveCatalog();
+            renderCategoryTabs();
+            renderVideoGrid();
+            renderAdminVideoList();
+            showToast('Đã xóa video khỏi danh sách.');
+        }
+
+        function exportVideosJson() {
+            const dataStr = JSON.stringify(videosCatalog, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'videos.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Đã tải xuống tệp cấu hình videos.json!');
+        }
+
+        document.getElementById('import-json-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const imported = JSON.parse(ev.target.result);
+                    if (Array.isArray(imported) && imported.length > 0) {
+                        videosCatalog = imported;
+                        saveCatalog();
+                        renderCategoryTabs();
+                        renderVideoGrid();
+                        renderAdminVideoList();
+                        showToast(`Đã nhập thành công ${imported.length} video từ tệp JSON!`);
+                    }
+                } catch (err) {
+                    showToast('Tệp JSON không hợp lệ.');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function restoreDefaultVideos() {
+            videosCatalog = [...DEFAULT_VIDEOS];
+            saveCatalog();
+            activeCategory = 'Tất Cả';
+            renderCategoryTabs();
+            renderVideoGrid();
+            renderAdminVideoList();
+            showToast('Đã khôi phục kho 8 video mẫu mặc định!');
+        }
+
+        // =========================================================================
+        // 5. TIỆN ÍCH SAO CHÉP, TOAST & BỘ ĐẾM KÊNH ẢO THỜI GIAN THỰC
+        // =========================================================================
+        function copyText(str, msg) {
+            const temp = document.createElement('textarea');
+            temp.value = str;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                showToast(msg);
+            } catch (err) {
+                showToast('Không thể sao chép tự động.');
+            }
+            document.body.removeChild(temp);
+        }
+
+        let toastTimer;
+        function showToast(message) {
+            const toast = document.getElementById('cinema-toast');
+            document.getElementById('cinema-toast-msg').textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        function formatNumberVN(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function animateCounterTick(el, newValue) {
+            if (!el) return;
+            el.textContent = formatNumberVN(newValue);
+            el.classList.add('is-ticking');
+            setTimeout(() => el.classList.remove('is-ticking'), 420);
+        }
+
+        function startVirtualSubscriberCounters() {
+            let subs1 = 48620;
+            let subs2 = 66840;
+            const el1 = document.getElementById('sub-count-1');
+            const el2 = document.getElementById('sub-count-2');
+
+            setInterval(() => {
+                subs1 += Math.floor(Math.random() * 3) + 1;
+                animateCounterTick(el1, subs1);
+            }, 2800);
+
+            setInterval(() => {
+                subs2 += Math.floor(Math.random() * 4) + 1;
+                animateCounterTick(el2, subs2);
+            }, 2200);
+        }
+
+        // =========================================================================
+        // 6. NỀN CANVAS 4D CINEMA SPOTLIGHT & LƯỚI PHỐI CẢNH
+        // =========================================================================
+        const canvas = document.getElementById('cinema-4d-stage');
+        const ctx = canvas.getContext('2d');
+        let cw, ch, time = 0, particles = [];
+
+        function resizeCanvas() {
+            cw = canvas.width = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+            particles = Array.from({ length: 65 }, () => ({
+                x: (Math.random() - 0.5) * cw * 1.5,
+                y: (Math.random() - 0.5) * ch * 1.5,
+                z: Math.random() * 1000 + 100,
+                color: Math.random() > 0.5 ? '#00f2fe' : (Math.random() > 0.5 ? '#f5b942' : '#ff0055')
+            }));
+        }
+
+        function renderCinema4D() {
+            time += 0.012;
+            ctx.fillStyle = '#05060a';
+            ctx.fillRect(0, 0, cw, ch);
+
+            const cx = cw / 2;
+            const cy = ch * 0.35;
+
+            // Luồng sáng rạp chiếu quét nhẹ
+            const grad1 = ctx.createLinearGradient(0, 0, cw * 0.7, ch);
+            grad1.addColorStop(0, 'rgba(0, 242, 254, 0.07)');
+            grad1.addColorStop(1, 'transparent');
+            ctx.save();
+            ctx.translate(cw * 0.18, -30);
+            ctx.rotate(Math.sin(time * 0.55) * 0.3);
+            ctx.fillStyle = grad1;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(360, ch * 1.2);
+            ctx.lineTo(-160, ch * 1.2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            // Hạt bụi ánh sáng 4D
+            particles.forEach(p => {
+                p.z -= 2.4;
+                if (p.z <= 10) {
+                    p.z = 1000;
+                    p.x = (Math.random() - 0.5) * cw * 1.5;
+                    p.y = (Math.random() - 0.5) * ch * 1.5;
+                }
+                const scale = 300 / p.z;
+                const sx = cx + p.x * scale;
+                const sy = cy + p.y * scale;
+                const size = Math.max(0.6, scale * 1.9);
+
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = Math.min(0.75, (1000 - p.z) / 850);
+                ctx.beginPath();
+                ctx.arc(sx, sy, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
+            requestAnimationFrame(renderCinema4D);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.onload = function () {
+            resizeCanvas();
+            renderCinema4D();
+            loadCatalog();
+            renderCategoryTabs();
+            renderVideoGrid();
+            startVirtualSubscriberCounters();
+        };
+    </script>
+</body>
+</html>
